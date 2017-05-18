@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="card_view_vertical_margin">8dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_img_size">8dp</dimen>
+    <dimen name="card_view_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="padding_ingredient_table">16dp</dimen>
+    <dimen name="padding_step">16dp</dimen>
+    <dimen name="bullet_dimension">30dp</dimen>
+    <dimen name="padding_text_view">8dp</dimen>
+    <dimen name="padding_arrow">2dp</dimen>
+    <dimen name="arrow_stroke_width">10dp</dimen>
+    <dimen name="bullet_radius">4dp</dimen>
+    <dimen name="padding_bullet">4dp</dimen>
+    <dimen name="arrow_dimension">60dp</dimen>
+    <dimen name="padding_horizontal_nav_button">8dp</dimen>
+</resources>

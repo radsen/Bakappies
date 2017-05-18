@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/activity_horizontal_margin"
+    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:padding="@dimen/padding_step"
+    android:background="@drawable/bkg_white_square_round">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="@dimen/bullet_dimension"
+        android:layout_height="@dimen/bullet_dimension"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:background="@drawable/bkg_step_bullet"
+        android:textColor="@android:color/white"
+        android:maxLength="2"
+        android:gravity="center_vertical|center_horizontal"
+        tools:text="1"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_nav_next_24px"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/view" />
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+        tools:text="@string/mock_step_desc"
+        android:paddingStart="@dimen/padding_text_view"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/tv_title"
+        android:layout_toStartOf="@id/view"/>
+
+</RelativeLayout>

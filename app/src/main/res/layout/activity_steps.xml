@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.udacity.bakappies.custom.NonSwipeableViewPager
+        android:id="@+id/vp_steps"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"/>
+
+    <ImageView
+        android:id="@+id/btn_prev"
+        android:layout_width="@dimen/arrow_dimension"
+        android:layout_height="@dimen/arrow_dimension"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/selector_nav_button_prev"
+        android:contentDescription="@string/btn_txt_prev"/>
+
+    <ImageView
+        android:id="@+id/btn_next"
+        android:layout_width="@dimen/arrow_dimension"
+        android:layout_height="@dimen/arrow_dimension"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/selector_nav_button_next"
+        android:contentDescription="@string/btn_txt_next"/>
+
+</RelativeLayout>

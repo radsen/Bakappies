@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Bakappies</string>
+    <string name="action_settings">Settings</string>
+    <string name="mock_recipe_name">Recipe Name</string>
+    <string name="mock_servings">Servings: 8</string>
+    <string name="txt_servings">Servings: %d</string>
+    <string name="mock_step_title">1</string>
+    <string name="mock_step_desc">Short description for the step</string>
+    <string name="txt_step_title">%d</string>
+    <string name="txt_title_ingredients">Ingredients</string>
+    <string name="mock_section">Section</string>
+    <string name="txt_title_steps">Steps</string>
+    <string name="format_ingredient">\u2022 %s</string>
+    <string name="btn_txt_prev">Prev</string>
+    <string name="btn_txt_next">Next</string>
+    <string name="txt_description_title">Description</string>
+</resources>
