@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/card_view_horizontal_margin"
+        tools:text="@string/bullet"
+        android:text="@string/bullet"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/ingredient"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/mock_ingredient_name"
+        android:textColor="@android:color/white"
+        android:layout_weight="3"/>
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/mock_ingredient_qty"
+        android:gravity="end"
+        android:textColor="@android:color/white"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/measure"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/card_view_horizontal_margin"
+        tools:text="@string/mock_ingredient_measure"
+        android:textColor="@android:color/white"
+        android:layout_weight="1"/>
+
+</LinearLayout>

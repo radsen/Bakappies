@@ -10,8 +10,12 @@
     <string name="txt_title_ingredients">Ingredients</string>
     <string name="mock_section">Section</string>
     <string name="txt_title_steps">Steps</string>
-    <string name="format_ingredient">\u2022 %s</string>
     <string name="btn_txt_prev">Prev</string>
     <string name="btn_txt_next">Next</string>
     <string name="txt_description_title">Description</string>
+    <string name="mock_ingredient_name">Ingredient Name</string>
+    <string name="mock_ingredient_qty">35.0</string>
+    <string name="mock_ingredient_measure">Unit</string>
+    <string name="bullet">\u2022</string>
+    <string name="empty_string">No ingredients found</string>
 </resources>

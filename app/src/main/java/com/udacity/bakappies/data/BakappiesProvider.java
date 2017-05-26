@@ -22,6 +22,7 @@ public class BakappiesProvider extends ContentProvider {
     private static final int CODE_RECIPE = 101;
     private static final int CODE_INGREDIENTS_BY_RECIPE = 102;
     private static final int CODE_STEPS_BY_RECIPE = 103;
+    private static final int CODE_RANDOM_RECIPE = 104;
 
     private static final int CODE_INGREDIENT = 201;
     private static final int CODE_INGREDIENT_BY_ID = 202;
@@ -36,6 +37,10 @@ public class BakappiesProvider extends ContentProvider {
 
         uriMatcher.addURI(BakappiesContract.CONTENT_AUTHORITY, BakappiesContract.PATH_RECIPE,
                 CODE_RECIPE);
+
+        uriMatcher.addURI(BakappiesContract.CONTENT_AUTHORITY,
+                BakappiesContract.PATH_RECIPE + "/random",
+                CODE_RANDOM_RECIPE);
 
         uriMatcher.addURI(BakappiesContract.CONTENT_AUTHORITY,
                 BakappiesContract.PATH_RECIPE + "/#/" + BakappiesContract.PATH_INGREDIENT,
@@ -140,6 +145,18 @@ public class BakappiesProvider extends ContentProvider {
                         null,
                         null,
                         null
+                );
+                break;
+            case  CODE_RANDOM_RECIPE:
+                String orderBy = "RANDOM() LIMIT 1";
+                cursor = db.query(
+                        RecipesEntry.TABLE_NAME,
+                        RecipesEntry.PROJECTION,
+                        null,
+                        null,
+                        null,
+                        null,
+                        orderBy
                 );
                 break;
         }

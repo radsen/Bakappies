@@ -1,5 +1,6 @@
 package com.udacity.bakappies.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -43,6 +44,18 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     private RecipeAsyncQueryHandler recipeQueryHandler;
     private Recipe recipe;
     private RecipePartAdapter mAdapter;
+    private OnRecipeListener recipeListener;
+    private boolean isTablet;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnRecipeListener){
+            recipeListener = (OnRecipeListener) context;
+        } else {
+            throw new ClassCastException("The activity must implement OnRecipeListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -56,6 +69,8 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
 
         recipe = getArguments().getParcelable(BakappiesConstants.RECIPE_KEY);
 
@@ -112,16 +127,26 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
                 Log.d(TAG, "Steps: " + cursor.getCount());
                 recipe.setSteps(cursor);
                 mAdapter.swap(recipe);
+                if (isTablet) recipeListener.onRecipeSelected(recipe.getSteps().get(0));
                 break;
         }
     }
 
     @Override
     public void onClick(int position) {
-        Intent intent = new Intent(getContext(), StepDetailActivity.class);
-        intent.putExtra(BakappiesConstants.RECIPE_ID_KEY, recipe.getId());
-        intent.putExtra(BakappiesConstants.RECIPE_NAME_KEY, recipe.getName());
-        intent.putExtra(BakappiesConstants.STEP_NUMBER_KEY, position);
-        startActivity(intent);
+        if(!getResources().getBoolean(R.bool.isTablet)){
+            Intent intent = new Intent(getContext(), StepDetailActivity.class);
+            intent.putExtra(BakappiesConstants.RECIPE_ID_KEY, recipe.getId());
+            intent.putExtra(BakappiesConstants.RECIPE_NAME_KEY, recipe.getName());
+            intent.putExtra(BakappiesConstants.STEP_NUMBER_KEY, position);
+            startActivity(intent);
+        } else {
+            recipeListener.onRecipeSelected(recipe.getSteps().get(position));
+        }
+
+    }
+
+    public interface OnRecipeListener {
+        void onRecipeSelected(Step step);
     }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_container"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bkg_widget">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_gravity="bottom"
+        tools:text="@string/mock_recipe_name"
+        android:paddingTop="@dimen/card_view_vertical_margin"
+        android:paddingBottom="@dimen/card_view_horizontal_margin" />
+
+    <ImageView
+        android:id="@+id/widget_recipe_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/widget_title"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/widget_title"
+        android:scaleType="fitEnd"
+        tools:src="@drawable/ic_bake_default" />
+
+    <ListView
+        android:id="@+id/widget_ingredient_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/widget_title"
+        android:layout_weight="1"
+        android:divider="@android:color/white"
+        android:dividerHeight="@dimen/widget_divider_height" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/empty_string"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_weight="1"/>
+
+</RelativeLayout>

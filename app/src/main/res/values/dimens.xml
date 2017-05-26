@@ -15,4 +15,8 @@
     <dimen name="padding_bullet">4dp</dimen>
     <dimen name="arrow_dimension">60dp</dimen>
     <dimen name="padding_horizontal_nav_button">8dp</dimen>
+    <dimen name="widget_divider_height">1dp</dimen>
+    <dimen name="min_widget_width">180dp</dimen>
+    <dimen name="min_widget_height">40dp</dimen>
+    <dimen name="min_widget_image_width">40dp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package com.udacity.bakappies.activity;
 
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -11,9 +12,15 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.udacity.bakappies.R;
+import com.udacity.bakappies.util.VideoPlayer;
 import com.udacity.bakappies.adapter.StepPagerAdapter;
 import com.udacity.bakappies.common.BakappiesConstants;
 import com.udacity.bakappies.data.BakappiesContract;
@@ -30,7 +37,8 @@ import butterknife.ButterKnife;
  */
 
 public class StepDetailActivity extends BaseActivity implements
-        LoaderManager.LoaderCallbacks<List<Step>>, View.OnClickListener, ViewPager.OnPageChangeListener {
+        LoaderManager.LoaderCallbacks<List<Step>>, View.OnClickListener,
+        ViewPager.OnPageChangeListener, ExoPlayer.EventListener {
 
     private static final String TAG = StepDetailActivity.class.getSimpleName();
 
@@ -48,6 +56,10 @@ public class StepDetailActivity extends BaseActivity implements
     private int stepNumber;
     private String recipeName;
     private boolean isLandscape;
+    private VideoPlayer videoPlayer;
+
+    @Nullable @BindView(R.id.exo_player)
+    SimpleExoPlayerView playerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +85,13 @@ public class StepDetailActivity extends BaseActivity implements
 
         super.onCreate(savedInstanceState);
 
+        videoPlayer = new VideoPlayer(this, playerView, this);
+
+        if(savedInstanceState != null){
+            long position = savedInstanceState.getLong(VideoPlayer.POSITION_KEY);
+            videoPlayer.setPosition(position);
+        }
+
         setContentView(R.layout.activity_steps);
         ButterKnife.bind(this);
 
@@ -94,11 +113,27 @@ public class StepDetailActivity extends BaseActivity implements
             btnPrev.setOnClickListener(this);
             btnNext.setOnClickListener(this);
 
-            getSupportLoaderManager()
-                    .restartLoader(StepLoader.STEP_LOADER, null, this)
-                    .forceLoad();
         }
 
+        getSupportLoaderManager()
+                .restartLoader(StepLoader.STEP_LOADER, null, this)
+                .forceLoad();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isLandscape){
+            videoPlayer.initializePlayer(playerView);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(isLandscape){
+            videoPlayer.releasePlayer();
+        }
     }
 
     @Override
@@ -114,15 +149,24 @@ public class StepDetailActivity extends BaseActivity implements
 
     @Override
     public void onLoadFinished(Loader<List<Step>> loader, List<Step> data) {
-        mStepPagerAdapter.swap(data);
-        if(data != null || data.size() > 0){
+        if(data == null || data.size() == 0){
+            return;
+        }
+
+        if(!isLandscape){
+            mStepPagerAdapter.swap(data);
             vpSteps.setCurrentItem(stepNumber, false);
+        } else {
+            Uri videoUri = Uri.parse(data.get(stepNumber).getVideoURL());
+            videoPlayer.preparePlayer(videoUri);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<List<Step>> loader) {
-        mStepPagerAdapter.swap(null);
+        if(!isLandscape){
+            mStepPagerAdapter.swap(null);
+        }
     }
 
     @Override
@@ -160,4 +204,34 @@ public class StepDetailActivity extends BaseActivity implements
 
     @Override
     public void onPageScrollStateChanged(int state) {}
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+        Log.d(TAG, "onTimelineChanged");
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+        Log.d(TAG, "onTracksChanged");
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+        Log.d(TAG, "onLoadingChanged " + isLoading);
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        Log.d(TAG, "onPlayerStateChanged");
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+        Log.d(TAG, "onPlayerError");
+    }
+
+    @Override
+    public void onPositionDiscontinuity() {
+        Log.d(TAG, "onPositionDiscontinuity");
+    }
 }

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.udacity.bakappies.adapter.RecipeAdapter;
 import com.udacity.bakappies.common.BakappiesConstants;
 import com.udacity.bakappies.model.Recipe;
 import com.udacity.bakappies.network.SyncUtils;
+import com.udacity.bakappies.util.GridUtils;
 import com.udacity.bakappies.util.RecipeLoader;
 
 import java.util.List;
@@ -86,8 +88,16 @@ public class FragmentMenu extends BaseFragment implements RecipeAdapter.ClickLis
         super.onActivityCreated(savedInstanceState);
 
         rvRecipes.setHasFixedSize(true);
-        RecyclerView.LayoutManager mLinearLayout = new LinearLayoutManager(getContext());
-        rvRecipes.setLayoutManager(mLinearLayout);
+
+        RecyclerView.LayoutManager mLayoutMng;
+        if(getResources().getBoolean(R.bool.isTablet)){
+            int columns = GridUtils.calculateNoOfColumns(getContext());
+            mLayoutMng = new GridLayoutManager(getContext(), columns);
+        } else {
+            mLayoutMng = new LinearLayoutManager(getContext());
+        }
+
+        rvRecipes.setLayoutManager(mLayoutMng);
         mAdapter = new RecipeAdapter(getContext(), null, this);
         rvRecipes.setAdapter(mAdapter);
 

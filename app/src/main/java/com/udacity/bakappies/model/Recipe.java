@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.udacity.bakappies.data.BakappiesContract;
 import com.udacity.bakappies.data.BakappiesContract.IngredientEntry;
 import com.udacity.bakappies.data.BakappiesContract.StepEntry;
 
@@ -153,4 +154,11 @@ public class Recipe implements Parcelable {
         }
     }
 
+    public static Recipe create(Cursor cursor) {
+        int id = cursor.getInt(cursor.getColumnIndex(BakappiesContract.RecipesEntry._ID));
+        String name = cursor.getString(cursor.getColumnIndex(BakappiesContract.RecipesEntry.NAME));
+        int servings = cursor.getInt(cursor.getColumnIndex(BakappiesContract.RecipesEntry.SERVINGS));
+        String image = cursor.getString(cursor.getColumnIndex(BakappiesContract.RecipesEntry.IMAGE));
+        return new Recipe(id, name, servings, image);
+    }
 }

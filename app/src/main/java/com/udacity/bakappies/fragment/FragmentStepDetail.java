@@ -2,9 +2,7 @@ package com.udacity.bakappies.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,29 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.udacity.bakappies.R;
+import com.udacity.bakappies.util.VideoPlayer;
 import com.udacity.bakappies.common.BakappiesConstants;
 import com.udacity.bakappies.model.Step;
 import com.udacity.bakappies.util.BindingUtils;
@@ -64,8 +47,8 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
     TextView tvFullDesc;
 
     private Unbinder unbinder;
-    private SimpleExoPlayer mExoPlayer;
     private Step step;
+    private VideoPlayer videoPlayer;
 
     public static FragmentStepDetail newInstance(Step step) {
         FragmentStepDetail stepDetail = new FragmentStepDetail();
@@ -87,43 +70,12 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        videoPlayer = new VideoPlayer(getContext(), player, this);
+        videoPlayer.initializePlayer();
 
-        step = getArguments().getParcelable(BakappiesConstants.STEP_KEY);
-        if(step != null){
-            tvTitle.setText(step.getShortDescription());
-            initializePlayer();
-            BindingUtils.loadImage(ivThumbnail, step.getThumbnailURL(), R.drawable.ic_oven);
-            tvFullDesc.setText(step.getDescription());
-        }
-
-    }
-
-    private void initializePlayer() {
-        if(mExoPlayer == null){
-
-            // Create an instance of the ExoPlayer.
-            BandwidthMeter bandWithMeter = new DefaultBandwidthMeter();
-            TrackSelection.Factory videoStreamTrackSelector =
-                    new AdaptiveTrackSelection.Factory(bandWithMeter);
-            TrackSelector trackSelector = new DefaultTrackSelector(videoStreamTrackSelector);
-
-            LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-            player.setPlayer(mExoPlayer);
-
-            mExoPlayer.addListener(this);
-
-            // Prepare the media source
-            Uri uri = Uri.parse(step.getVideoURL());
-            if(!TextUtils.isEmpty(uri.toString())){
-                Log.d(TAG, uri.toString());
-                DefaultDataSourceFactory dataSource = new DefaultDataSourceFactory(getContext(),
-                        getString(R.string.app_name));
-                ExtractorsFactory extractorFactory = new DefaultExtractorsFactory();
-                MediaSource mediaSource = new ExtractorMediaSource(uri, dataSource, extractorFactory, null, null);
-                mExoPlayer.prepare(mediaSource);
-            }
-
+        if(getArguments() != null){
+            step = getArguments().getParcelable(BakappiesConstants.STEP_KEY);
+            load(step);
         }
     }
 
@@ -136,50 +88,62 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume " + step.getId());
-        initializePlayer();
+        Log.d(TAG, "onResume");
+        videoPlayer.initializePlayer();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause " + step.getId());
-        releasePlayer();
+        Log.d(TAG, "onPause");
+        videoPlayer.releasePlayer();
     }
 
-    private void releasePlayer() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+        outState.putLong(VideoPlayer.POSITION_KEY, videoPlayer.getPosition());
     }
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
-
+        Log.d(TAG, "onTimelineChanged");
     }
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
+        Log.d(TAG, "onTracksChanged");
     }
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-
+        Log.d(TAG, "onLoadingChanged");
     }
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
+        Log.d(TAG, "onPlayerStateChanged");
     }
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-
+        Log.d(TAG, "onPlayerError");
     }
 
     @Override
     public void onPositionDiscontinuity() {
+        Log.d(TAG, "onPositionDiscontinuity");
+    }
 
+    public void load(Step step) {
+        if(step != null){
+            tvTitle.setText(step.getShortDescription());
+            BindingUtils.loadImage(ivThumbnail, step.getThumbnailURL(), R.drawable.ic_oven);
+            tvFullDesc.setText(step.getDescription());
+
+            Uri videoUri = Uri.parse(step.getVideoURL());
+            videoPlayer.preparePlayer(videoUri);
+        }
     }
 }

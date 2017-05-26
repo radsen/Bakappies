@@ -78,20 +78,28 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
         if(holder instanceof PartIngredient){
             PartIngredient partIngredient = (PartIngredient)holder;
             partIngredient.glIngredientTable.removeAllViews();
-            for(Ingredient ingredient : recipe.getIngredients()){
 
-                LinearLayout.LayoutParams params =
-                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams paramBullet =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            for(Ingredient ingredient : recipe.getIngredients()){
 
                 LinearLayout tableRow = new LinearLayout(context);
                 tableRow.setOrientation(LinearLayout.HORIZONTAL);
                 tableRow.setLayoutParams(params);
                 tableRow.setWeightSum(1.0f);
 
+                String strBullet = context.getString(R.string.bullet);
+                TextView tvBullet = createColumnTextView(strBullet, paramBullet, true);
+                tableRow.addView(tvBullet);
+
                 params.weight = 0.5f;
-                String strIngredient = String.format(context.getString(R.string.format_ingredient),
-                        ingredient.getIngredient());
+                String strIngredient = ingredient.getIngredient();
                 TextView tvIngredient = createColumnTextView(strIngredient, params, false);
                 tableRow.addView(tvIngredient);
 

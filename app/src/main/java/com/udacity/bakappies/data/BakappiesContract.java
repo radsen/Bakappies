@@ -94,6 +94,15 @@ public class BakappiesContract {
                 };
     }
 
+    public static Uri buildUriForRandomRecipe(){
+        Uri uri = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RECIPE)
+                .appendPath("random")
+                .build();
+
+        return uri;
+    }
+
     public static Uri buildUriIngredient(int recipeId){
         Uri uri = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RECIPE)
