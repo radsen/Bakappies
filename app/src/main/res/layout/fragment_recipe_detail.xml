@@ -8,39 +8,26 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:weightSum="10">
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
+            style="@style/Section"
             tools:text="@string/mock_section" />
 
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/exo_player"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="0dp"
+            android:minHeight="@dimen/min_player_height"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin">
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_weight="7">
         </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
+            style="@style/Section"
             android:text="@string/txt_description_title"
             tools:text="@string/mock_section" />
 
@@ -64,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:layout_toRightOf="@id/iv_thumbnail"
+                android:layout_toEndOf="@id/iv_thumbnail"
                 android:paddingStart="@dimen/padding_text_view"
                 tools:text="A very long description to test the step fragment once the user clicks on the step list contained in the recipe fragment"/>
 

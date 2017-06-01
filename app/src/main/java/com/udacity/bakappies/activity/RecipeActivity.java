@@ -2,6 +2,7 @@ package com.udacity.bakappies.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.udacity.bakappies.R;
 import com.udacity.bakappies.common.BakappiesConstants;
@@ -14,7 +15,9 @@ import com.udacity.bakappies.model.Step;
  * Created by radsen on 5/10/17.
  */
 
-public class RecipeActivity extends BaseActivity implements FragmentRecipe.OnRecipeListener {
+public class RecipeActivity extends PlayerActivity implements FragmentRecipe.OnRecipeListener {
+
+    private static final String TAG = RecipeActivity.class.getSimpleName();
 
     private FragmentRecipe fragmentRecipe;
     private FragmentStepDetail fragmentStep;
@@ -28,7 +31,10 @@ public class RecipeActivity extends BaseActivity implements FragmentRecipe.OnRec
         Bundle bundle = getIntent().getExtras();
         recipe = null;
         if(bundle != null){
+            Log.d(TAG, "bundle not null");
             recipe = bundle.getParcelable(BakappiesConstants.RECIPE_KEY);
+        } else {
+            Log.d(TAG, "bundle null");
         }
 
         getSupportActionBar().setTitle(recipe.getName());

@@ -19,4 +19,10 @@
     <dimen name="min_widget_width">180dp</dimen>
     <dimen name="min_widget_height">40dp</dimen>
     <dimen name="min_widget_image_width">40dp</dimen>
+    <dimen name="min_player_height">200dp</dimen>
+
+
+    <dimen name="title_size">25sp</dimen>
+    <dimen name="subtitle_size">20sp</dimen>
+
 </resources>

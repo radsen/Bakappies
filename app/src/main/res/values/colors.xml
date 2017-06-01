@@ -6,4 +6,7 @@
     <color name="card_view_end_color_gradient">#209E9E9E</color>
     <color name="card_view_start_color_gradient">#5037474F</color>
     <color name="bkg_color_widget">#CC37474F</color>
+
+    <color name="white">@android:color/white</color>
+
 </resources>

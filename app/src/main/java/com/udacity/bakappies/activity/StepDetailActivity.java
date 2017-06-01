@@ -13,14 +13,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.udacity.bakappies.R;
-import com.udacity.bakappies.util.VideoPlayer;
 import com.udacity.bakappies.adapter.StepPagerAdapter;
 import com.udacity.bakappies.common.BakappiesConstants;
 import com.udacity.bakappies.data.BakappiesContract;
@@ -36,9 +30,9 @@ import butterknife.ButterKnife;
  * Created by radsen on 5/12/17.
  */
 
-public class StepDetailActivity extends BaseActivity implements
+public class StepDetailActivity extends PlayerActivity implements
         LoaderManager.LoaderCallbacks<List<Step>>, View.OnClickListener,
-        ViewPager.OnPageChangeListener, ExoPlayer.EventListener {
+        ViewPager.OnPageChangeListener {
 
     private static final String TAG = StepDetailActivity.class.getSimpleName();
 
@@ -56,7 +50,6 @@ public class StepDetailActivity extends BaseActivity implements
     private int stepNumber;
     private String recipeName;
     private boolean isLandscape;
-    private VideoPlayer videoPlayer;
 
     @Nullable @BindView(R.id.exo_player)
     SimpleExoPlayerView playerView;
@@ -85,13 +78,6 @@ public class StepDetailActivity extends BaseActivity implements
 
         super.onCreate(savedInstanceState);
 
-        videoPlayer = new VideoPlayer(this, playerView, this);
-
-        if(savedInstanceState != null){
-            long position = savedInstanceState.getLong(VideoPlayer.POSITION_KEY);
-            videoPlayer.setPosition(position);
-        }
-
         setContentView(R.layout.activity_steps);
         ButterKnife.bind(this);
 
@@ -102,6 +88,10 @@ public class StepDetailActivity extends BaseActivity implements
             getSupportActionBar().setTitle(recipeName);
             recipeId = bundle.getInt(BakappiesConstants.RECIPE_ID_KEY);
             stepNumber = bundle.getInt(BakappiesConstants.STEP_NUMBER_KEY);
+        }
+
+        if(savedInstanceState != null){
+            stepNumber = savedInstanceState.getInt(BakappiesConstants.STEP_NUMBER_KEY);
         }
 
         if(!isLandscape){
@@ -121,23 +111,9 @@ public class StepDetailActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if(isLandscape){
-            videoPlayer.initializePlayer(playerView);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(isLandscape){
-            videoPlayer.releasePlayer();
-        }
-    }
-
-    @Override
     public Loader<List<Step>> onCreateLoader(int id, Bundle args) {
+        showProgress();
+
         StepLoader loader = null;
         switch (id){
             case StepLoader.STEP_LOADER:
@@ -158,8 +134,11 @@ public class StepDetailActivity extends BaseActivity implements
             vpSteps.setCurrentItem(stepNumber, false);
         } else {
             Uri videoUri = Uri.parse(data.get(stepNumber).getVideoURL());
-            videoPlayer.preparePlayer(videoUri);
+            setPlayerView(playerView);
+            preparePlayer(videoUri);
         }
+
+        hideProgress();
     }
 
     @Override
@@ -167,18 +146,28 @@ public class StepDetailActivity extends BaseActivity implements
         if(!isLandscape){
             mStepPagerAdapter.swap(null);
         }
+
+        hideProgress();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BakappiesConstants.STEP_NUMBER_KEY, stepNumber);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_prev:
-                vpSteps.setCurrentItem(vpSteps.getCurrentItem() - 1, true);
+                stepNumber = vpSteps.getCurrentItem() - 1;
                 break;
             case R.id.btn_next:
-                vpSteps.setCurrentItem(vpSteps.getCurrentItem() + 1, true);
+                stepNumber = vpSteps.getCurrentItem() + 1;
                 break;
         }
+
+        vpSteps.setCurrentItem(stepNumber, true);
     }
 
     @Override
@@ -204,34 +193,4 @@ public class StepDetailActivity extends BaseActivity implements
 
     @Override
     public void onPageScrollStateChanged(int state) {}
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-        Log.d(TAG, "onTimelineChanged");
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-        Log.d(TAG, "onTracksChanged");
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-        Log.d(TAG, "onLoadingChanged " + isLoading);
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        Log.d(TAG, "onPlayerStateChanged");
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        Log.d(TAG, "onPlayerError");
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-        Log.d(TAG, "onPositionDiscontinuity");
-    }
 }

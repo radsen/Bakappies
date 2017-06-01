@@ -46,6 +46,8 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     private RecipePartAdapter mAdapter;
     private OnRecipeListener recipeListener;
     private boolean isTablet;
+    private boolean checkIngredients;
+    private boolean checkSteps;
 
     @Override
     public void onAttach(Context context) {
@@ -79,6 +81,8 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
         rvRecipeParts.setLayoutManager(mLinearLayout);
         mAdapter = new RecipePartAdapter(getContext(), null, this);
         rvRecipeParts.setAdapter(mAdapter);
+
+        showProgress();
 
         recipeQueryHandler = new RecipeAsyncQueryHandler(getContext().getContentResolver(), this);
         recipeQueryHandler.startQuery(
@@ -122,13 +126,19 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
             case RecipeAsyncQueryHandler.INGREDIENT_TOKEN:
                 Log.d(TAG, "Ingredients: " + cursor.getCount());
                 recipe.setIngredients(cursor);
+                checkIngredients = true;
                 break;
             case RecipeAsyncQueryHandler.STEP_TOKEN:
                 Log.d(TAG, "Steps: " + cursor.getCount());
                 recipe.setSteps(cursor);
                 mAdapter.swap(recipe);
+                checkSteps = true;
                 if (isTablet) recipeListener.onRecipeSelected(recipe.getSteps().get(0));
                 break;
+        }
+
+        if(checkIngredients && checkSteps){
+            hideProgress();
         }
     }
 

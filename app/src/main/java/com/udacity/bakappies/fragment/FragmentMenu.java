@@ -60,6 +60,8 @@ public class FragmentMenu extends BaseFragment implements RecipeAdapter.ClickLis
                         .restartLoader(RECIPE_LOADER, null, cbLoader)
                         .forceLoad();
             }
+
+            hideProgress();
         }
     };
 
@@ -103,6 +105,8 @@ public class FragmentMenu extends BaseFragment implements RecipeAdapter.ClickLis
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(ACTION_RECIPES);
+
+        showProgress();
 
         if(SyncUtils.isInitialized()){
             getActivity().getSupportLoaderManager()
@@ -155,10 +159,12 @@ public class FragmentMenu extends BaseFragment implements RecipeAdapter.ClickLis
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
         mAdapter.swap(data);
+        hideProgress();
     }
 
     @Override
     public void onLoaderReset(Loader<List<Recipe>> loader) {
         mAdapter.swap(null);
+        hideProgress();
     }
 }

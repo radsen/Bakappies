@@ -16,5 +16,4 @@ public interface BakappiesConstants {
     int RECIPE_LIST = 1;
 
     String ACTION_RECIPES = "com.udacity.bakappies.action.recipes";
-    String INGREDIENTS_KEY = "com.udacity.bakappies.ingredients.key";
 }

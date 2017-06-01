@@ -28,4 +28,6 @@
         android:background="@drawable/selector_nav_button_next"
         android:contentDescription="@string/btn_txt_next"/>
 
+    <include layout="@layout/progress_info"/>
+
 </RelativeLayout>

@@ -17,11 +17,7 @@
 
     <TextView
         android:id="@+id/widget_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        style="@style/Title"
         android:layout_gravity="bottom"
         tools:text="@string/mock_recipe_name"
         android:paddingTop="@dimen/card_view_vertical_margin"
@@ -31,10 +27,7 @@
 
     <TextView
         android:id="@+id/widget_servings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
+        style="@style/Subtitle"
         android:layout_toStartOf="@id/widget_recipe_image"
         android:layout_alignParentStart="true"
         android:gravity="start"

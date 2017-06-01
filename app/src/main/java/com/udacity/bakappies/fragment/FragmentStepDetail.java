@@ -1,5 +1,6 @@
 package com.udacity.bakappies.fragment;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,15 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.udacity.bakappies.R;
-import com.udacity.bakappies.util.VideoPlayer;
+import com.udacity.bakappies.activity.PlayerActivity;
 import com.udacity.bakappies.common.BakappiesConstants;
 import com.udacity.bakappies.model.Step;
 import com.udacity.bakappies.util.BindingUtils;
@@ -30,7 +25,7 @@ import butterknife.Unbinder;
  * Created by radsen on 5/8/17.
  */
 
-public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventListener {
+public class FragmentStepDetail extends BaseFragment {
 
     private static final String TAG = FragmentStepDetail.class.getSimpleName();
 
@@ -48,7 +43,8 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
 
     private Unbinder unbinder;
     private Step step;
-    private VideoPlayer videoPlayer;
+
+    private PlayerActivity activity;
 
     public static FragmentStepDetail newInstance(Step step) {
         FragmentStepDetail stepDetail = new FragmentStepDetail();
@@ -58,10 +54,29 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
         return stepDetail;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments() != null){
+            step = getArguments().getParcelable(BakappiesConstants.STEP_KEY);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof PlayerActivity){
+            activity = (PlayerActivity) context;
+        } else {
+            throw new ClassCastException("The context must extend PlayerActivity");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView " + step.getShortDescription());
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -70,13 +85,7 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        videoPlayer = new VideoPlayer(getContext(), player, this);
-        videoPlayer.initializePlayer();
-
-        if(getArguments() != null){
-            step = getArguments().getParcelable(BakappiesConstants.STEP_KEY);
-            load(step);
-        }
+        Log.d(TAG, "onActivityCreated " + step.getShortDescription());
     }
 
     @Override
@@ -88,62 +97,41 @@ public class FragmentStepDetail extends BaseFragment implements ExoPlayer.EventL
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
-        videoPlayer.initializePlayer();
+        Log.d(TAG, "onResume " + step.getShortDescription());
+        if(getUserVisibleHint()){
+            load(step);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
-        videoPlayer.releasePlayer();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState");
-        outState.putLong(VideoPlayer.POSITION_KEY, videoPlayer.getPosition());
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-        Log.d(TAG, "onTimelineChanged");
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-        Log.d(TAG, "onTracksChanged");
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-        Log.d(TAG, "onLoadingChanged");
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        Log.d(TAG, "onPlayerStateChanged");
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        Log.d(TAG, "onPlayerError");
-    }
-
-    @Override
-    public void onPositionDiscontinuity() {
-        Log.d(TAG, "onPositionDiscontinuity");
+        Log.d(TAG, "onPause " + step.getShortDescription());
     }
 
     public void load(Step step) {
+        Log.d(TAG, "load");
         if(step != null){
             tvTitle.setText(step.getShortDescription());
             BindingUtils.loadImage(ivThumbnail, step.getThumbnailURL(), R.drawable.ic_oven);
             tvFullDesc.setText(step.getDescription());
 
+            if(player.getPlayer() == null){
+                activity.setPlayerView(player);
+            }
+
             Uri videoUri = Uri.parse(step.getVideoURL());
-            videoPlayer.preparePlayer(videoUri);
+            activity.preparePlayer(videoUri);
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser && step != null){
+            Log.d(TAG, "setUserVisibleHint - " + isVisibleToUser + " " + step.getShortDescription());
+            load(step);
         }
     }
 }

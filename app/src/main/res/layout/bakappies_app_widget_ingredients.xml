@@ -9,11 +9,7 @@
 
     <TextView
         android:id="@+id/widget_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
+        style="@style/Title"
         android:layout_gravity="bottom"
         tools:text="@string/mock_recipe_name"
         android:paddingTop="@dimen/card_view_vertical_margin"
