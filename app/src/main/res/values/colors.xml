@@ -8,5 +8,6 @@
     <color name="bkg_color_widget">#CC37474F</color>
 
     <color name="white">@android:color/white</color>
+    <color name="border_color">#CCCCCC</color>
 
 </resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/border_color"/>
+        </shape>
+    </item>
+    <item android:left="@dimen/border" android:right="@dimen/border">
+        <shape android:shape="rectangle">
+            <padding android:left="@dimen/activity_horizontal_margin"
+                android:right="@dimen/activity_horizontal_margin"/>
+            <solid android:color="@color/white"/>
+        </shape>
+    </item>
+</layer-list>

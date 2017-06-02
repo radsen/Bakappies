@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.udacity.bakappies.R;
 import com.udacity.bakappies.activity.PlayerActivity;
@@ -36,7 +38,10 @@ public class FragmentStepDetail extends BaseFragment {
     TextView tvTitle;
 
     @BindView(R.id.exo_player)
-    SimpleExoPlayerView player;
+    SimpleExoPlayerView playerView;
+
+    @BindView(R.id.iv_no_content)
+    ImageView ivNoContent;
 
     @Nullable @BindView(R.id.tv_full_description)
     TextView tvFullDesc;
@@ -76,7 +81,6 @@ public class FragmentStepDetail extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView " + step.getShortDescription());
         View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -85,7 +89,6 @@ public class FragmentStepDetail extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated " + step.getShortDescription());
     }
 
     @Override
@@ -97,7 +100,6 @@ public class FragmentStepDetail extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume " + step.getShortDescription());
         if(getUserVisibleHint()){
             load(step);
         }
@@ -106,7 +108,6 @@ public class FragmentStepDetail extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause " + step.getShortDescription());
     }
 
     public void load(Step step) {
@@ -116,12 +117,17 @@ public class FragmentStepDetail extends BaseFragment {
             BindingUtils.loadImage(ivThumbnail, step.getThumbnailURL(), R.drawable.ic_oven);
             tvFullDesc.setText(step.getDescription());
 
-            if(player.getPlayer() == null){
-                activity.setPlayerView(player);
+            if(!TextUtils.isEmpty(step.getVideoURL())){
+                playerView.setPlayer(activity.getExoPlayer());
+                playerView.setVisibility(View.VISIBLE);
+                ivNoContent.setVisibility(View.GONE);
+                activity.preparePlayer(Uri.parse(step.getVideoURL()));
+            } else {
+                playerView.setVisibility(View.GONE);
+                playerView.setPlayer(null);
+                ivNoContent.setVisibility(View.VISIBLE);
             }
 
-            Uri videoUri = Uri.parse(step.getVideoURL());
-            activity.preparePlayer(videoUri);
         }
     }
 
@@ -130,7 +136,6 @@ public class FragmentStepDetail extends BaseFragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if(isVisibleToUser && step != null){
-            Log.d(TAG, "setUserVisibleHint - " + isVisibleToUser + " " + step.getShortDescription());
             load(step);
         }
     }

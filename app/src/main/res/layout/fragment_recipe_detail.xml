@@ -16,15 +16,12 @@
             style="@style/Section"
             tools:text="@string/mock_section" />
 
-        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-            android:id="@+id/exo_player"
+        <include layout="@layout/view_player"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:minHeight="@dimen/min_player_height"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="7">
-        </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+            android:layout_weight="7"/>
 
         <TextView
             style="@style/Section"

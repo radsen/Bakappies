@@ -2,15 +2,12 @@ package com.udacity.bakappies.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.udacity.bakappies.R;
@@ -77,43 +74,28 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
     public void onBindViewHolder(Part holder, final int position) {
         if(holder instanceof PartIngredient){
             PartIngredient partIngredient = (PartIngredient)holder;
-            partIngredient.glIngredientTable.removeAllViews();
 
-            LinearLayout.LayoutParams paramBullet =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            int ingredientRealPos = position - PART_INGREDIENT;
 
-            LinearLayout.LayoutParams params =
-                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-
-            for(Ingredient ingredient : recipe.getIngredients()){
-
-                LinearLayout tableRow = new LinearLayout(context);
-                tableRow.setOrientation(LinearLayout.HORIZONTAL);
-                tableRow.setLayoutParams(params);
-                tableRow.setWeightSum(1.0f);
-
-                String strBullet = context.getString(R.string.bullet);
-                TextView tvBullet = createColumnTextView(strBullet, paramBullet, true);
-                tableRow.addView(tvBullet);
-
-                params.weight = 0.5f;
-                String strIngredient = ingredient.getIngredient();
-                TextView tvIngredient = createColumnTextView(strIngredient, params, false);
-                tableRow.addView(tvIngredient);
-
-                params.weight = 0.2f;
-                TextView tvQuantity = createColumnTextView(String.valueOf(ingredient.getQuantity()),
-                        params, true);
-                tableRow.addView(tvQuantity);
-
-                params.weight = 0.3f;
-                TextView tvMeasure = createColumnTextView(ingredient.getMeasure(), params, false);
-                tableRow.addView(tvMeasure);
-
-                partIngredient.glIngredientTable.addView(tableRow);
+            int background = 0;
+            if(ingredientRealPos == 0){
+                background = R.drawable.bkg_table_top;
+            } else if (ingredientRealPos == recipe.getIngredients().size() - PART_INGREDIENT){
+                background = R.drawable.bkg_table_bottom;
+            } else {
+                background = R.drawable.bkg_table_row;
             }
+
+            Resources resources = context.getResources();
+            Drawable drawable = ResourcesCompat.getDrawable(resources, background, null);
+            partIngredient.itemView.setBackground(drawable);
+
+            Ingredient ingredient = recipe.getIngredients().get(ingredientRealPos);
+
+            partIngredient.tvIngredient.setText(ingredient.getIngredient());
+            partIngredient.tvQty.setText(String.valueOf(ingredient.getQuantity()));
+            partIngredient.tvMeasure.setText(ingredient.getMeasure());
+
         } else if(holder instanceof Section) {
             Section section = (Section) holder;
             String title = "";
@@ -125,9 +107,9 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
             section.tvSection.setText(title);
         } else if(holder instanceof PartStep) {
             PartStep partStep = (PartStep) holder;
-            final int stepRealPosition = position - PART_STEP;
+            final int stepRealPosition = position - (recipe.getIngredients().size() + SECTION_STEPS);
             final Step step = recipe.getSteps().get(stepRealPosition);
-            String title = String.format(context.getString(R.string.txt_step_title), position - SECTION_STEPS);
+            String title = String.format(context.getString(R.string.txt_step_title), stepRealPosition + PART_INGREDIENT);
             partStep.tvTitle.setText(title);
             partStep.tvDesc.setText(step.getShortDescription());
             ((PartStep) holder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -139,63 +121,43 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
         }
     }
 
-    private TextView createColumnTextView(String text, LinearLayout.LayoutParams params,
-                                          boolean isAlignedToRight) {
-
-        TextView textView = new TextView(context);
-        textView.setText(text);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textView.setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small);
-        } else {
-            textView.setTextAppearance(context ,
-                    android.R.style.TextAppearance_DeviceDefault_Small);
-        }
-
-        if(isAlignedToRight){
-            Resources resources =  context.getResources();
-            int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8.0f,
-                    resources.getDisplayMetrics());
-            params.setMarginEnd(px);
-            textView.setGravity(Gravity.RIGHT);
-        }
-
-        textView.setLayoutParams(params);
-
-        return textView;
-    }
-
     @Override
     public int getItemViewType(int position) {
-        switch (position){
-            case SECTION_INGREDIENTS:
-                return SECTION_INGREDIENTS;
-            case PART_INGREDIENT:
-                return  PART_INGREDIENT;
-            case SECTION_STEPS:
-                return SECTION_STEPS;
-            default:
-                return PART_STEP;
+        int rowType = -1;
+
+        if(position == SECTION_INGREDIENTS){
+            rowType = SECTION_INGREDIENTS;
+        } else if(position > SECTION_INGREDIENTS && position <= recipe.getIngredients().size()) {
+            rowType =  PART_INGREDIENT;
+        } else if (position > recipe.getIngredients().size() &&
+                position < getItemCount() - recipe.getSteps().size()){
+            rowType = SECTION_STEPS;
+        } else if(position >= getItemCount() - recipe.getSteps().size()){
+            rowType = PART_STEP;
         }
+
+        return rowType;
     }
 
     @Override
     public int getItemCount() {
-        int parts = 0;
+        int rows = 0;
 
         if(recipe == null){
-            return parts;
+            return rows;
         }
 
         if(recipe.getIngredients().size() > 0){
-            parts++;
+            rows++;
+            rows = rows + recipe.getIngredients().size();
         }
 
         if(recipe.getSteps().size() > 0){
-            parts = parts + recipe.getSteps().size();
+            rows++;
+            rows = rows + recipe.getSteps().size();
         }
 
-        return parts;
+        return rows;
     }
 
     public void swap(Recipe recipe) {
@@ -215,8 +177,14 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
 
     public class PartIngredient extends Part {
 
-        @BindView(R.id.gl_ingredient_table)
-        GridLayout glIngredientTable;
+        @BindView(R.id.ingredient)
+        TextView tvIngredient;
+
+        @BindView(R.id.quantity)
+        TextView tvQty;
+
+        @BindView(R.id.measure)
+        TextView tvMeasure;
 
         public PartIngredient(View view) {
             super(view);

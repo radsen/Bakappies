@@ -134,7 +134,7 @@ public class StepDetailActivity extends PlayerActivity implements
             vpSteps.setCurrentItem(stepNumber, false);
         } else {
             Uri videoUri = Uri.parse(data.get(stepNumber).getVideoURL());
-            setPlayerView(playerView);
+            playerView.setPlayer(getExoPlayer());
             preparePlayer(videoUri);
         }
 

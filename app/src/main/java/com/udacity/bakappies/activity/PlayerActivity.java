@@ -162,24 +162,23 @@ public class PlayerActivity extends BaseActivity implements ExoPlayer.EventListe
         Log.d(TAG, "onPositionDiscontinuity");
     }
 
-    public void setPlayerView(SimpleExoPlayerView player) {
-        player.setPlayer(mExoPlayer);
+    public void preparePlayer(Uri uri){
+        Log.d(TAG, uri.toString());
+        DefaultDataSourceFactory dataSource = new DefaultDataSourceFactory(this,
+                getString(R.string.app_name));
+        ExtractorsFactory extractorFactory = new DefaultExtractorsFactory();
+        MediaSource mediaSource = new ExtractorMediaSource(uri, dataSource, extractorFactory,
+                mediaHandler, null);
+
+        boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;
+        if (haveResumePosition) {
+            mExoPlayer.seekTo(resumeWindow, resumePosition);
+        }
+        mExoPlayer.prepare(mediaSource, !haveResumePosition, false);
+
     }
 
-    public void preparePlayer(Uri uri){
-        if(!TextUtils.isEmpty(uri.toString())){
-            Log.d(TAG, uri.toString());
-            DefaultDataSourceFactory dataSource = new DefaultDataSourceFactory(this,
-                    getString(R.string.app_name));
-            ExtractorsFactory extractorFactory = new DefaultExtractorsFactory();
-            MediaSource mediaSource = new ExtractorMediaSource(uri, dataSource, extractorFactory,
-                    mediaHandler, null);
-
-            boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;
-            if (haveResumePosition) {
-                mExoPlayer.seekTo(resumeWindow, resumePosition);
-            }
-            mExoPlayer.prepare(mediaSource, !haveResumePosition, false);
-        }
+    public SimpleExoPlayer getExoPlayer() {
+        return mExoPlayer;
     }
 }

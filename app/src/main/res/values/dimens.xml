@@ -24,5 +24,7 @@
 
     <dimen name="title_size">25sp</dimen>
     <dimen name="subtitle_size">20sp</dimen>
+    <dimen name="border">1dp</dimen>
+    <dimen name="corner_radius">4dp</dimen>
 
 </resources>
