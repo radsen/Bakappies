@@ -52,7 +52,6 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
 
     private int mScrollPosition;
     private int mSelPos;
-    private int NO_SELECTION = -1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,7 +87,10 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
 
         if(savedInstanceState != null){
             mScrollPosition = savedInstanceState.getInt(BakappiesConstants.SCROLLED_POSITION, 0);
-            mSelPos = savedInstanceState.getInt(BakappiesConstants.SELECTED_POSITION, NO_SELECTION);
+            mSelPos = savedInstanceState.getInt(BakappiesConstants.SELECTED_POSITION,
+                    RecipePartAdapter.NO_SELECTION);
+        } else {
+            mSelPos = RecipePartAdapter.NO_SELECTION;
         }
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
@@ -131,7 +133,7 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
             rvRecipeParts.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                    mSelPos = NO_SELECTION;
+                    mSelPos = RecipePartAdapter.NO_SELECTION;
                 }
             });
         } else {
@@ -139,7 +141,7 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    mSelPos = NO_SELECTION;
+                    mSelPos = RecipePartAdapter.NO_SELECTION;
                 }
             });
         }
@@ -182,9 +184,12 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
                 mAdapter.swap(recipe);
                 checkSteps = true;
                 if (isTablet) {
-                    int position = (mSelPos != NO_SELECTION) ? mSelPos : 0;
+                    int position = (mSelPos != RecipePartAdapter.NO_SELECTION) ? mSelPos : 0;
                     recipeListener.onRecipeSelected(recipe.getSteps().get(position));
                     rvRecipeParts.scrollToPosition(mScrollPosition);
+                    int selPos = (mSelPos != RecipePartAdapter.NO_SELECTION) ? mSelPos :
+                            RecipePartAdapter.NO_SELECTION;
+                    mAdapter.setSelectedStep(selPos);
                 }
                 break;
         }

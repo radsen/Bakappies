@@ -29,9 +29,22 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
     private static final int SECTION_INGREDIENTS = 0;
     private static final int SECTION_STEPS = 2;
 
+    public static final int NO_SELECTION = -1;
+
     private final Context context;
     private final ItemClickListener itemClickListener;
     private Recipe recipe;
+    private int mSelectedPosition;
+    private View mSelectedView;
+
+    public void setSelectedStep(int selectedPosition) {
+        if(selectedPosition == NO_SELECTION){
+            this.mSelectedPosition = NO_SELECTION;
+        } else {
+            this.mSelectedPosition = selectedPosition +
+                    recipe.getIngredients().size() + SECTION_STEPS;
+        }
+    }
 
     public interface ItemClickListener {
         void onClick(int position);
@@ -91,7 +104,15 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
             Resources resources = context.getResources();
             Drawable drawable = ResourcesCompat.getDrawable(resources, background, null);
             holder.itemView.setBackground(drawable);
+        } else {
+            // https://stackoverflow.com/questions/27390682/highlight-selected-item-inside-a-recyclerview
+            if (position == mSelectedPosition) {
+                holder.itemView.setSelected(true);
 
+                mSelectedView = holder.itemView;
+            } else {
+                holder.itemView.setSelected(false);
+            }
         }
 
         if(holder instanceof PartIngredient){
@@ -115,6 +136,7 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
             }
             section.tvSection.setText(title);
         } else if(holder instanceof PartStep) {
+
             PartStep partStep = (PartStep) holder;
             final int stepRealPosition = position - (recipe.getIngredients().size() + SECTION_STEPS);
             final Step step = recipe.getSteps().get(stepRealPosition);
@@ -124,9 +146,26 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
             ((PartStep) holder).itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (context.getResources().getBoolean(R.bool.isTablet)){
+                        // https://stackoverflow.com/questions/27390682/highlight-selected-item-inside-a-recyclerview
+                        if(!view.isSelected()) {
+                            if (mSelectedView != null) {
+                                mSelectedView.setSelected(false);
+                            }
+                            mSelectedPosition = ((RecyclerView) view.getParent())
+                                    .getChildAdapterPosition(view);
+                            mSelectedView = view;
+                        } else {
+                            mSelectedPosition = NO_SELECTION;
+                            mSelectedView = null;
+                        }
+
+                        view.setSelected(!view.isSelected());
+                    }
                     itemClickListener.onClick(stepRealPosition);
                 }
             });
+
         }
     }
 
