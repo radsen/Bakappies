@@ -29,10 +29,7 @@ import butterknife.Unbinder;
 
 public class FragmentStepDetail extends BaseFragment {
 
-    private static final String TAG = FragmentStepDetail.class.getSimpleName();
-
-    @Nullable @BindView(R.id.iv_thumbnail)
-    ImageView ivThumbnail;
+    public static final String TAG = FragmentStepDetail.class.getSimpleName();
 
     @Nullable @BindView(R.id.tv_title)
     TextView tvTitle;
@@ -114,7 +111,6 @@ public class FragmentStepDetail extends BaseFragment {
         Log.d(TAG, "load");
         if(step != null){
             tvTitle.setText(step.getShortDescription());
-            BindingUtils.loadImage(ivThumbnail, step.getThumbnailURL(), R.drawable.ic_oven);
             tvFullDesc.setText(step.getDescription());
 
             if(!TextUtils.isEmpty(step.getVideoURL())){

@@ -87,11 +87,11 @@ public class StepDetailActivity extends PlayerActivity implements
             recipeName = bundle.getString(BakappiesConstants.RECIPE_NAME_KEY);
             getSupportActionBar().setTitle(recipeName);
             recipeId = bundle.getInt(BakappiesConstants.RECIPE_ID_KEY);
-            stepNumber = bundle.getInt(BakappiesConstants.STEP_NUMBER_KEY);
+            stepNumber = bundle.getInt(BakappiesConstants.STEP_NUMBER_KEY, 0);
         }
 
         if(savedInstanceState != null){
-            stepNumber = savedInstanceState.getInt(BakappiesConstants.STEP_NUMBER_KEY);
+            stepNumber = savedInstanceState.getInt(BakappiesConstants.STEP_NUMBER_KEY, 0);
         }
 
         if(!isLandscape){

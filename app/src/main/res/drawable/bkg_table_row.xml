@@ -8,6 +8,8 @@
     <item android:left="@dimen/border" android:right="@dimen/border">
         <shape android:shape="rectangle">
             <padding android:left="@dimen/activity_horizontal_margin"
+                android:top="@dimen/bkg_vertical_margin"
+                android:bottom="@dimen/bkg_vertical_margin"
                 android:right="@dimen/activity_horizontal_margin"/>
             <solid android:color="@color/white"/>
         </shape>

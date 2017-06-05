@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/container"
+            android:id="@+id/recipe_master"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4">
@@ -17,7 +17,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/detail"
+            android:id="@+id/recipe_detail"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="6">

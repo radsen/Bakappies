@@ -4,10 +4,10 @@
     <stroke android:width="@dimen/border"
         android:color="@color/border_color"/>
     <padding
-        android:left="4dp"
-        android:bottom="4dp"
-        android:right="4dp"
-        android:top="4dp"/>
+        android:left="@dimen/activity_horizontal_margin"
+        android:bottom="@dimen/activity_vertical_margin"
+        android:right="@dimen/activity_horizontal_margin"
+        android:top="@dimen/activity_vertical_margin"/>
     <corners android:radius="@dimen/corner_radius"/>
     <solid android:color="@color/white"/>
 </shape>

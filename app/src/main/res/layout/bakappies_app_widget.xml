@@ -10,6 +10,8 @@
         android:id="@+id/widget_recipe_image"
         android:layout_width="@dimen/min_widget_image_width"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/card_view_vertical_margin"
+        android:paddingBottom="@dimen/card_view_horizontal_margin"
         tools:src="@drawable/ic_bake_default"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -23,6 +25,7 @@
         android:paddingTop="@dimen/card_view_vertical_margin"
         android:paddingBottom="@dimen/card_view_horizontal_margin"
         android:layout_toStartOf="@id/widget_recipe_image"
+        android:textColor="@color/white"
         android:layout_alignParentStart="true"/>
 
     <TextView
@@ -30,6 +33,7 @@
         style="@style/Subtitle"
         android:layout_toStartOf="@id/widget_recipe_image"
         android:layout_alignParentStart="true"
+        android:textColor="@color/white"
         android:gravity="start"
         tools:text="@string/mock_servings"
         android:layout_below="@id/widget_title"/>

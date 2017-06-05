@@ -26,5 +26,7 @@
     <dimen name="subtitle_size">20sp</dimen>
     <dimen name="border">1dp</dimen>
     <dimen name="corner_radius">4dp</dimen>
+    <dimen name="card_view_image_height">150dp</dimen>
+    <dimen name="bkg_vertical_margin">8dp</dimen>
 
 </resources>

@@ -31,32 +31,33 @@ public class RecipeActivity extends PlayerActivity implements FragmentRecipe.OnR
         Bundle bundle = getIntent().getExtras();
         recipe = null;
         if(bundle != null){
-            Log.d(TAG, "bundle not null");
             recipe = bundle.getParcelable(BakappiesConstants.RECIPE_KEY);
-        } else {
-            Log.d(TAG, "bundle null");
         }
 
         getSupportActionBar().setTitle(recipe.getName());
 
-        if(getResources().getBoolean(R.bool.isTablet)){
+        if(getResources().getBoolean(R.bool.isTablet) && savedInstanceState == null) {
             fragmentRecipe = FragmentRecipe.newInstance(recipe);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container, fragmentRecipe)
+                    .replace(R.id.recipe_master, fragmentRecipe, FragmentRecipe.TAG)
                     .commit();
 
             fragmentStep = new FragmentStepDetail();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.detail, fragmentStep)
+                    .replace(R.id.recipe_detail, fragmentStep, FragmentStepDetail.TAG)
                     .commit();
-
-        } else {
+        } else if (getResources().getBoolean(R.bool.isTablet) && savedInstanceState != null) {
+            fragmentRecipe = (FragmentRecipe)
+                    getSupportFragmentManager().findFragmentByTag(FragmentRecipe.TAG);
+            fragmentStep = (FragmentStepDetail)
+                    getSupportFragmentManager().findFragmentByTag(FragmentStepDetail.TAG);
+        } else if (!getResources().getBoolean(R.bool.isTablet)) {
             fragmentRecipe = FragmentRecipe.newInstance(recipe);
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container, fragmentRecipe)
+                    .replace(R.id.recipe_master, fragmentRecipe)
                     .commit();
         }
 

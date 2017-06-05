@@ -3,6 +3,7 @@ package com.udacity.bakappies.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +35,7 @@ import butterknife.Unbinder;
 public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHandler.QueryListener,
         RecipePartAdapter.ItemClickListener {
 
-    private static final String TAG = FragmentRecipe.class.getSimpleName();
+    public static final String TAG = FragmentRecipe.class.getSimpleName();
 
     @BindView(R.id.rv_recipe_parts)
     RecyclerView rvRecipeParts;
@@ -49,9 +50,20 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     private boolean checkIngredients;
     private boolean checkSteps;
 
+    private int mScrollPosition;
+    private int mSelPos;
+    private int NO_SELECTION = -1;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d(TAG, "onAttach");
         if(context instanceof OnRecipeListener){
             recipeListener = (OnRecipeListener) context;
         } else {
@@ -63,6 +75,7 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -71,6 +84,12 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
+
+        if(savedInstanceState != null){
+            mScrollPosition = savedInstanceState.getInt(BakappiesConstants.SCROLLED_POSITION, 0);
+            mSelPos = savedInstanceState.getInt(BakappiesConstants.SELECTED_POSITION, NO_SELECTION);
+        }
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
 
@@ -79,6 +98,7 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
         rvRecipeParts.setHasFixedSize(true);
         RecyclerView.LayoutManager mLinearLayout = new LinearLayoutManager(getContext());
         rvRecipeParts.setLayoutManager(mLinearLayout);
+        setScrollChangedListener();
         mAdapter = new RecipePartAdapter(getContext(), null, this);
         rvRecipeParts.setAdapter(mAdapter);
 
@@ -106,9 +126,39 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
         );
     }
 
+    private void setScrollChangedListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            rvRecipeParts.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                    mSelPos = NO_SELECTION;
+                }
+            });
+        } else {
+            rvRecipeParts.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    mSelPos = NO_SELECTION;
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+        mScrollPosition = ((LinearLayoutManager) rvRecipeParts.getLayoutManager()).findFirstVisibleItemPosition();
+        outState.putInt(BakappiesConstants.SCROLLED_POSITION, mScrollPosition);
+        outState.putInt(BakappiesConstants.SELECTED_POSITION, mSelPos);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onSaveInstanceState");
         unbinder.unbind();
     }
 
@@ -124,16 +174,18 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
     public void onQueryComplete(int token, Cursor cursor) {
         switch (token){
             case RecipeAsyncQueryHandler.INGREDIENT_TOKEN:
-                Log.d(TAG, "Ingredients: " + cursor.getCount());
                 recipe.setIngredients(cursor);
                 checkIngredients = true;
                 break;
             case RecipeAsyncQueryHandler.STEP_TOKEN:
-                Log.d(TAG, "Steps: " + cursor.getCount());
                 recipe.setSteps(cursor);
                 mAdapter.swap(recipe);
                 checkSteps = true;
-                if (isTablet) recipeListener.onRecipeSelected(recipe.getSteps().get(0));
+                if (isTablet) {
+                    int position = (mSelPos != NO_SELECTION) ? mSelPos : 0;
+                    recipeListener.onRecipeSelected(recipe.getSteps().get(position));
+                    rvRecipeParts.scrollToPosition(mScrollPosition);
+                }
                 break;
         }
 
@@ -144,6 +196,8 @@ public class FragmentRecipe extends BaseFragment implements RecipeAsyncQueryHand
 
     @Override
     public void onClick(int position) {
+        mSelPos = position;
+
         if(!getResources().getBoolean(R.bool.isTablet)){
             Intent intent = new Intent(getContext(), StepDetailActivity.class);
             intent.putExtra(BakappiesConstants.RECIPE_ID_KEY, recipe.getId());

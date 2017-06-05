@@ -12,6 +12,7 @@
         style="@style/Title"
         android:layout_gravity="bottom"
         tools:text="@string/mock_recipe_name"
+        android:textColor="@color/white"
         android:paddingTop="@dimen/card_view_vertical_margin"
         android:paddingBottom="@dimen/card_view_horizontal_margin" />
 
@@ -23,6 +24,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/widget_title"
         android:scaleType="fitEnd"
+        android:paddingTop="@dimen/card_view_vertical_margin"
+        android:paddingBottom="@dimen/card_view_horizontal_margin"
         tools:src="@drawable/ic_bake_default" />
 
     <ListView

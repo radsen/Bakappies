@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/card_view_horizontal_margin"
+        android:textStyle="bold"
         tools:text="@string/bullet"
         android:text="@string/bullet" />
 
@@ -26,6 +27,7 @@
         android:id="@+id/quantity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         tools:text="@string/mock_ingredient_qty"
         android:gravity="end"
         android:layout_weight="1"/>
@@ -35,6 +37,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/card_view_horizontal_margin"
+        android:textStyle="bold"
         tools:text="@string/mock_ingredient_measure"
         android:layout_weight="1"/>
 

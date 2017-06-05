@@ -60,6 +60,7 @@ public class Step implements Parcelable {
     }
 
     public String getDescription() {
+        description = description.replaceFirst("\\d+[.]+[ ]", "");
         return description;
     }
 

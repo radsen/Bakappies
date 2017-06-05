@@ -3,30 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/button_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/btn_prev"
+            android:layout_width="@dimen/arrow_dimension"
+            android:layout_height="@dimen/arrow_dimension"
+            android:background="@drawable/selector_nav_button_prev"
+            android:contentDescription="@string/btn_txt_prev"
+            android:layout_alignParentStart="true"/>
+
+        <ImageView
+            android:id="@+id/btn_next"
+            android:layout_width="@dimen/arrow_dimension"
+            android:layout_height="@dimen/arrow_dimension"
+            android:background="@drawable/selector_nav_button_next"
+            android:contentDescription="@string/btn_txt_next"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
     <com.udacity.bakappies.custom.NonSwipeableViewPager
         android:id="@+id/vp_steps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"/>
-
-    <ImageView
-        android:id="@+id/btn_prev"
-        android:layout_width="@dimen/arrow_dimension"
-        android:layout_height="@dimen/arrow_dimension"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/selector_nav_button_prev"
-        android:contentDescription="@string/btn_txt_prev"/>
-
-    <ImageView
-        android:id="@+id/btn_next"
-        android:layout_width="@dimen/arrow_dimension"
-        android:layout_height="@dimen/arrow_dimension"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/selector_nav_button_next"
-        android:contentDescription="@string/btn_txt_next"/>
+        android:layout_above="@id/button_panel"
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
 
     <include layout="@layout/progress_info"/>
 

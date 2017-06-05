@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@color/bkg_player">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/exo_player"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="@dimen/min_player_height"
-        android:visibility="visible">
+        android:layout_height="match_parent">
     </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
     <ImageView
@@ -18,7 +17,6 @@
         android:minHeight="@dimen/min_player_height"
         android:visibility="gone"
         android:scaleType="center"
-        android:background="#CC000000"
         android:src="@drawable/ic_videocam_off_white_48dp"/>
 
 </FrameLayout>

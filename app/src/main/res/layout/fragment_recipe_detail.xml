@@ -1,60 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="10">
-
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/Section"
-            tools:text="@string/mock_section" />
-
-        <include layout="@layout/view_player"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_weight="7"/>
-
-        <TextView
-            style="@style/Section"
-            android:text="@string/txt_description_title"
-            tools:text="@string/mock_section" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:padding="@dimen/padding_step"
+            android:layout_height="match_parent"
             android:background="@drawable/bkg_white_square_round">
 
-            <ImageView
-                android:id="@+id/iv_thumbnail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:src="@drawable/ic_oven"/>
+                <TextView
+                    android:id="@+id/tv_title"
+                    style="@style/Section"
+                    tools:text="@string/mock_section" />
 
-            <TextView
-                android:id="@+id/tv_full_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:layout_toEndOf="@id/iv_thumbnail"
-                android:paddingStart="@dimen/padding_text_view"
-                tools:text="A very long description to test the step fragment once the user clicks on the step list contained in the recipe fragment"/>
+                <include layout="@layout/view_player"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/min_player_height"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
 
-        </RelativeLayout>
+                <TextView
+                    style="@style/Section"
+                    android:text="@string/txt_description_title"
+                    tools:text="@string/mock_section" />
 
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_full_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                            android:layout_marginStart="@dimen/activity_horizontal_margin"
+                            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                            android:layout_marginBottom="@dimen/activity_vertical_margin"
+                            tools:text="A very long description to test the step fragment once the user clicks on the step list contained in the recipe fragment"/>
 
-</ScrollView>
+                </ScrollView>
+
+        </LinearLayout>
+
+</LinearLayout>

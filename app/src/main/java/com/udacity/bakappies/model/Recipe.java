@@ -129,6 +129,8 @@ public class Recipe implements Parcelable {
                     ingredients.add(new Ingredient(qty, measure, ingredient));
                 } while (cursor.moveToNext());
             }
+
+            cursor.close();
         }
     }
 
@@ -151,6 +153,8 @@ public class Recipe implements Parcelable {
                     steps.add(new Step(id, shortDescription, description, videoUrl, thumbnail));
                 } while (cursor.moveToNext());
             }
+
+            cursor.close();
         }
     }
 

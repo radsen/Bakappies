@@ -45,6 +45,8 @@ public class RecipeLoader extends AsyncTaskLoader<List<Recipe>> {
             }
             while (cursor.moveToNext());
 
+            cursor.close();
+
             return recipeList;
         } else {
             return null;

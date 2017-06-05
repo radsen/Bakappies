@@ -16,4 +16,6 @@ public interface BakappiesConstants {
     int RECIPE_LIST = 1;
 
     String ACTION_RECIPES = "com.udacity.bakappies.action.recipes";
+    String SCROLLED_POSITION = "com.udacity.bakappies.scroll.position";
+    String SELECTED_POSITION = "com.udacity.bakappies.selected.position";
 }

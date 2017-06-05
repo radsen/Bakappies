@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/bkg_right_tablet">
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/Section"
+            android:paddingTop="@dimen/card_view_vertical_margin"
+            android:paddingBottom="@dimen/card_view_vertical_margin"
+            tools:text="@string/mock_section" />
+
+        <include layout="@layout/view_player"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/min_player_height"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+
+        <TextView
+            style="@style/Section"
+            android:paddingTop="@dimen/card_view_vertical_margin"
+            android:paddingBottom="@dimen/card_view_vertical_margin"
+            android:text="@string/txt_description_title"
+            tools:text="@string/mock_section" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_full_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    tools:text="A very long description to test the step fragment once the user clicks on the step list contained in the recipe fragment"/>
+
+        </ScrollView>
+
+</LinearLayout>
+

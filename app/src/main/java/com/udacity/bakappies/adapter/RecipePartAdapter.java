@@ -72,23 +72,32 @@ public class RecipePartAdapter extends RecyclerView.Adapter<RecipePartAdapter.Pa
 
     @Override
     public void onBindViewHolder(Part holder, final int position) {
-        if(holder instanceof PartIngredient){
-            PartIngredient partIngredient = (PartIngredient)holder;
 
-            int ingredientRealPos = position - PART_INGREDIENT;
+        if (!context.getResources().getBoolean(R.bool.isTablet)){
 
-            int background = 0;
-            if(ingredientRealPos == 0){
+            int background;
+            if(position == 0){
                 background = R.drawable.bkg_table_top;
-            } else if (ingredientRealPos == recipe.getIngredients().size() - PART_INGREDIENT){
+            } else if (position == getItemCount()){
                 background = R.drawable.bkg_table_bottom;
             } else {
-                background = R.drawable.bkg_table_row;
+                if(holder instanceof PartStep){
+                    background = R.drawable.selector_step_item;
+                } else {
+                    background = R.drawable.bkg_table_row;
+                }
             }
 
             Resources resources = context.getResources();
             Drawable drawable = ResourcesCompat.getDrawable(resources, background, null);
-            partIngredient.itemView.setBackground(drawable);
+            holder.itemView.setBackground(drawable);
+
+        }
+
+        if(holder instanceof PartIngredient){
+            PartIngredient partIngredient = (PartIngredient)holder;
+
+            int ingredientRealPos = position - PART_INGREDIENT;
 
             Ingredient ingredient = recipe.getIngredients().get(ingredientRealPos);
 
